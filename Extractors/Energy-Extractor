@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#create a file to save the data
+touch data-file
+echo "Structure, Energy, St.Dev, St.Err" >> data-file
+
+#loops through each idealized structure
+for((i=1;i<=10;i++))
+do
+
+#extracting folder name
+file=$(awk 'FNR=='$i' {print $1}' files.txt)
+
+#change of directories to access output file
+cd ${file}/Output/System_0
+
+#declaration/initialization of variables (calculation for mean and standard deviation)
+#mean used due to fluctuation in values at different locations with Monte Carlo moves
+mean=$(grep "total potential energy" *.data | awk '{sum+=$5} END {print (sum/NR)}')
+stdev=$(grep "total potential energy" *.data | awk '{x+=$5; y+=$5*$5} END {print sqrt(y/NR-(x/NR)^2)}')
+
+#prints the values in the data-file
+echo $file, $mean, $stdev, $sterr  >> ../../../data-file
+
+#goes back three directories
+cd ../../..
+done
