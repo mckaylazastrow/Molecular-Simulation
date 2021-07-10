@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#loop through different idealized structures
+for((i=1;i<=10;i++))
+do
+
+#extracting folder name
+file=$(awk 'FNR=='$i' {print $1}' files.txt)
+#echo $file
+
+##makes a folder for each of the structures
+#mkdir $file
+
+##copies files into the structure folder
+#cp *.def run *.input ${file}.cif $file
+
+#changes directory to sturcture folder
+cd $file
+
+##replaces STRUCTURES with the specific structure in the simulation input
+#sed -i 's/STRUCTURES/'${file}'/' simulation.input
+
+#submits the run file within each folder
+qsub run
+
+#change of directory
+cd ..
+done
